@@ -1,11 +1,3 @@
-package main
-
-import (
-	"io"
-	"os"
-	"strings"
-)
-
 type rot13Reader struct {
 	r io.Reader
 }
@@ -15,20 +7,19 @@ func (r rot13Reader) Read(b []byte) (int, error) {
 		n, err := r.r.Read(b)
 		for i := 0; i < n; i++ {
 			v := b[i]
-			if v >= 65 && v <= 90 {
-				if v - 13 < 65 {
-					b[i] = 90 - (65 - (v - 12))
-				} else {
-					b[i] = v - 13
+			if v >= 'A' && v <= 'Z' {
+				v += 13
+				if v > 'Z' {
+					v -= 26
 				}
 			}
-			if v >= 97 && v <= 122 {
-				if v - 13 < 97 {
-					b[i] = 122 - (97 - (v - 12))
-				} else {
-					b[i] = v - 13
+			if v >= 'a' && v <= 'z' {
+				v += 13
+				if v > 'z' {
+					v -= 26
 				}
 			}
+			b[i] = v
 		}
 		return n, err
 	}
